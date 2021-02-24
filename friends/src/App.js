@@ -6,6 +6,10 @@ import { BrowserRouter as Router } from "react-router-dom";
 import styled from "styled-components"
 
 import Login from './components/Login'
+import FriendsList from './components/ListofFriends'
+import PrivateRoute from './components/PrivateRoute'
+
+import { axiosWithAuth } from "./utils/axiosWithAuth";
 
 import './App.css';
 
@@ -13,9 +17,19 @@ import './App.css';
 
 function App() {
 
-  const logout = () => {
+  const history = useHistory();
 
-  }
+  const logout = () => {
+    // axios call to logout - usually will invalidate the token from the server
+    axiosWithAuth()
+      .post("/api/logout")
+      .then(() => {
+        // remove the token from localStorage
+        localStorage.removeItem("token");
+        // re-route to the Login
+        history.push("/login");
+      });
+  };
 
   return (
     <Router>
@@ -35,7 +49,7 @@ function App() {
             </li>
           </ul>
           <Switch>
-            {/* <PrivateRoute exact path="/protected" component={ } /> */}
+            <PrivateRoute exact path="/protected" component={FriendsList} />
             <Route path="/login" component={Login} />
             <Route component={Login} />
           </Switch>

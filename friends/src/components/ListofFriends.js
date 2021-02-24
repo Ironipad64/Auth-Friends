@@ -11,3 +11,5 @@ class FriendsList extends React.Component {
     }
 }
 
+export default FriendsList;
+
